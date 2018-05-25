@@ -34,6 +34,8 @@ defmodule ExIcal.Parser do
   @spec parse(String.t) :: [%Event{}]
   def parse(data) do
     data
+    |> String.replace(~s"\n\t", ~S"\n")
+    |> String.replace(~s"\n\x20", ~S"\n")
     |> String.split("\n")
     |> Enum.reduce(%{events: []}, fn(line, data) ->
       parse_line(String.strip(line), data)
@@ -45,8 +47,8 @@ defmodule ExIcal.Parser do
   defp parse_line("DTSTART" <> start, data),            do: data |> put_to_map(:start, process_date(start, data[:tzid]))
   defp parse_line("DTEND" <> endd, data),               do: data |> put_to_map(:end, process_date(endd, data[:tzid]))
   defp parse_line("DTSTAMP" <> stamp, data),            do: data |> put_to_map(:stamp, process_date(stamp, data[:tzid]))
-  defp parse_line("SUMMARY:" <> summary, data),         do: data |> put_to_map(:summary, summary)
-  defp parse_line("DESCRIPTION:" <> description, data), do: data |> put_to_map(:description, description)
+  defp parse_line("SUMMARY:" <> summary, data),         do: data |> put_to_map(:summary, process_string(summary))
+  defp parse_line("DESCRIPTION:" <> description, data), do: data |> put_to_map(:description, process_string(description))
   defp parse_line("RRULE:" <> rrule, data),             do: data |> put_to_map(:rrule, process_rrule(rrule, data[:tzid]))
   defp parse_line("TZID:" <> tzid, data),               do: data |> Map.put(:tzid, tzid)
   defp parse_line("CATEGORIES:" <> categories, data),    do: data |> put_to_map(:categories, String.split(categories, ","))
@@ -79,5 +81,11 @@ defmodule ExIcal.Parser do
         _         -> hash
       end
     end)
+  end
+
+  defp process_string(string) when is_binary(string) do
+    string
+    |> String.replace(~S",", ~s",")
+    |> String.replace(~S"\n", ~s"\n")
   end
 end

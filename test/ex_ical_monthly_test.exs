@@ -6,17 +6,17 @@ defmodule ExIcalMonthlyTest do
 
   test "monthly reccuring event with until" do
     ical = """
-      BEGIN:VCALENDAR
-      CALSCALE:GREGORIAN
-      VERSION:2.0
-      BEGIN:VEVENT
-      RRULE:FREQ=MONTHLY;UNTIL=20161224T083000Z
-      DESCRIPTION:Let's go see Star Wars.
-      DTEND:20151224T084500Z
-      DTSTART:20151224T083000Z
-      SUMMARY:Film with Amy and Adam
-      END:VEVENT
-      END:VCALENDAR
+    BEGIN:VCALENDAR
+    CALSCALE:GREGORIAN
+    VERSION:2.0
+    BEGIN:VEVENT
+    RRULE:FREQ=MONTHLY;UNTIL=20161224T083000Z
+    DESCRIPTION:Let's go see Star Wars.
+    DTEND:20151224T084500Z
+    DTSTART:20151224T083000Z
+    SUMMARY:Film with Amy and Adam
+    END:VEVENT
+    END:VCALENDAR
     """
     events = ExIcal.parse(ical) |> ExIcal.by_range(DateParser.parse("20151224T083000Z"), DateParser.parse("20161224T084500Z"))
     assert events |> Enum.count == 13
@@ -51,17 +51,17 @@ defmodule ExIcalMonthlyTest do
 
   test "monthly reccuring event" do
     ical = """
-      BEGIN:VCALENDAR
-      CALSCALE:GREGORIAN
-      VERSION:2.0
-      BEGIN:VEVENT
-      RRULE:FREQ=MONTHLY
-      DESCRIPTION:Let's go see Star Wars.
-      DTEND:20151224T084500Z
-      DTSTART:20151224T083000Z
-      SUMMARY:Film with Amy and Adam
-      END:VEVENT
-      END:VCALENDAR
+    BEGIN:VCALENDAR
+    CALSCALE:GREGORIAN
+    VERSION:2.0
+    BEGIN:VEVENT
+    RRULE:FREQ=MONTHLY
+    DESCRIPTION:Let's go see Star Wars.
+    DTEND:20151224T084500Z
+    DTSTART:20151224T083000Z
+    SUMMARY:Film with Amy and Adam
+    END:VEVENT
+    END:VCALENDAR
     """
     events = ExIcal.parse(ical) |> ExIcal.by_range(DateParser.parse("20151224T083000Z"), DateParser.parse("20160924T084500Z"))
     assert events |> Enum.count == 10
@@ -90,17 +90,17 @@ defmodule ExIcalMonthlyTest do
 
   test "monthly reccuring event with until and interval" do
     ical = """
-      BEGIN:VCALENDAR
-      CALSCALE:GREGORIAN
-      VERSION:2.0
-      BEGIN:VEVENT
-      RRULE:FREQ=MONTHLY;UNTIL=20161224T083000Z;INTERVAL=3
-      DESCRIPTION:Let's go see Star Wars.
-      DTEND:20151224T084500Z
-      DTSTART:20151224T083000Z
-      SUMMARY:Film with Amy and Adam
-      END:VEVENT
-      END:VCALENDAR
+    BEGIN:VCALENDAR
+    CALSCALE:GREGORIAN
+    VERSION:2.0
+    BEGIN:VEVENT
+    RRULE:FREQ=MONTHLY;UNTIL=20161224T083000Z;INTERVAL=3
+    DESCRIPTION:Let's go see Star Wars.
+    DTEND:20151224T084500Z
+    DTSTART:20151224T083000Z
+    SUMMARY:Film with Amy and Adam
+    END:VEVENT
+    END:VCALENDAR
     """
     events = ExIcal.parse(ical) |> ExIcal.by_range(DateParser.parse("20151224T083000Z"), DateParser.parse("20161224T084500Z"))
     assert events |> Enum.count == 5
@@ -119,17 +119,17 @@ defmodule ExIcalMonthlyTest do
 
   test "monthly reccuring event with count" do
     ical = """
-      BEGIN:VCALENDAR
-      CALSCALE:GREGORIAN
-      VERSION:2.0
-      BEGIN:VEVENT
-      RRULE:FREQ=MONTHLY;COUNT=5
-      DESCRIPTION:Let's go see Star Wars.
-      DTEND:20151224T084500Z
-      DTSTART:20151224T083000Z
-      SUMMARY:Film with Amy and Adam
-      END:VEVENT
-      END:VCALENDAR
+    BEGIN:VCALENDAR
+    CALSCALE:GREGORIAN
+    VERSION:2.0
+    BEGIN:VEVENT
+    RRULE:FREQ=MONTHLY;COUNT=5
+    DESCRIPTION:Let's go see Star Wars.
+    DTEND:20151224T084500Z
+    DTSTART:20151224T083000Z
+    SUMMARY:Film with Amy and Adam
+    END:VEVENT
+    END:VCALENDAR
     """
     events = ExIcal.parse(ical) |> ExIcal.by_range(DateParser.parse("20151224T083000Z"), DateParser.parse("20161224T084500Z"))
     assert events |> Enum.count == 6
@@ -150,17 +150,17 @@ defmodule ExIcalMonthlyTest do
 
   test "monthly reccuring event with count and interval" do
     ical = """
-      BEGIN:VCALENDAR
-      CALSCALE:GREGORIAN
-      VERSION:2.0
-      BEGIN:VEVENT
-      RRULE:FREQ=MONTHLY;COUNT=5;INTERVAL=2
-      DESCRIPTION:Let's go see Star Wars.
-      DTEND:20151224T084500Z
-      DTSTART:20151224T083000Z
-      SUMMARY:Film with Amy and Adam
-      END:VEVENT
-      END:VCALENDAR
+    BEGIN:VCALENDAR
+    CALSCALE:GREGORIAN
+    VERSION:2.0
+    BEGIN:VEVENT
+    RRULE:FREQ=MONTHLY;COUNT=5;INTERVAL=2
+    DESCRIPTION:Let's go see Star Wars.
+    DTEND:20151224T084500Z
+    DTSTART:20151224T083000Z
+    SUMMARY:Film with Amy and Adam
+    END:VEVENT
+    END:VCALENDAR
     """
     events = ExIcal.parse(ical) |> ExIcal.by_range(DateParser.parse("20151224T083000Z"), DateParser.parse("20161224T084500Z"))
     assert events |> Enum.count == 6
@@ -181,17 +181,17 @@ defmodule ExIcalMonthlyTest do
 
   test "monthly reccuring event with interval" do
     ical = """
-      BEGIN:VCALENDAR
-      CALSCALE:GREGORIAN
-      VERSION:2.0
-      BEGIN:VEVENT
-      RRULE:FREQ=MONTHLY;INTERVAL=2
-      DESCRIPTION:Let's go see Star Wars.
-      DTEND:20151224T084500Z
-      DTSTART:20151224T083000Z
-      SUMMARY:Film with Amy and Adam
-      END:VEVENT
-      END:VCALENDAR
+    BEGIN:VCALENDAR
+    CALSCALE:GREGORIAN
+    VERSION:2.0
+    BEGIN:VEVENT
+    RRULE:FREQ=MONTHLY;INTERVAL=2
+    DESCRIPTION:Let's go see Star Wars.
+    DTEND:20151224T084500Z
+    DTSTART:20151224T083000Z
+    SUMMARY:Film with Amy and Adam
+    END:VEVENT
+    END:VCALENDAR
     """
     events = ExIcal.parse(ical) |> ExIcal.by_range(DateParser.parse("20151224T083000Z"), DateParser.parse("20161224T084500Z"))
     assert events |> Enum.count == 7

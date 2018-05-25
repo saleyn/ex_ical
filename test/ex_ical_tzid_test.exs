@@ -5,18 +5,18 @@ defmodule ExIcalTzidTest do
   test "daily reccuring event with until and tzid" do
     tzid = "Europe/Berlin"
     ical = """
-      BEGIN:VCALENDAR
-      CALSCALE:GREGORIAN
-      VERSION:2.0
-      TZID:#{tzid}
-      BEGIN:VEVENT
-      RRULE:FREQ=DAILY;UNTIL=20151231T083000
-      DESCRIPTION:Let's go see Star Wars.
-      DTEND:20151224T084500
-      DTSTART:20151224T083000
-      SUMMARY:Film with Amy and Adam
-      END:VEVENT
-      END:VCALENDAR
+    BEGIN:VCALENDAR
+    CALSCALE:GREGORIAN
+    VERSION:2.0
+    TZID:#{tzid}
+    BEGIN:VEVENT
+    RRULE:FREQ=DAILY;UNTIL=20151231T083000
+    DESCRIPTION:Let's go see Star Wars.
+    DTEND:20151224T084500
+    DTSTART:20151224T083000
+    SUMMARY:Film with Amy and Adam
+    END:VEVENT
+    END:VCALENDAR
     """
     events = ical
              |> ExIcal.parse
