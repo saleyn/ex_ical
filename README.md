@@ -21,3 +21,7 @@ Add ex_ical to your list of dependencies in `mix.exs`:
     |> ExIcal.parse
     |> ExIcal.by_range(Date.now, Date.now |> Date.shift(days: 7))
 ```
+
+## Thank you!
+
+[![Become Patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/bePatron?u=6912974)
