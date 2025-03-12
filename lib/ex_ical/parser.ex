@@ -31,8 +31,8 @@ defmodule ExIcal.Parser do
   ```
   """
 
-  @spec parse(String.t) :: [%Event{}]
-  def parse(data) do
+  @spec parse(String.t, String.t|nil) :: [%Event{}]
+  def parse(data, locale \\ nil) do
     data
     |> String.replace(~s"\n\t", ~S"\n")
     |> String.replace(~s"\n\x20", ~S"\n")
@@ -41,22 +41,22 @@ defmodule ExIcal.Parser do
     |> Enum.reduce(%{events: []}, fn(line, data) ->
       line
       |> String.trim() 
-      |> parse_line(data)
+      |> parse_line(data, locale)
     end)
     |> Map.get(:events)
   end
 
-  defp parse_line("BEGIN:VEVENT" <> _, data),           do: %{data | events: [%Event{} | data[:events]]}
-  defp parse_line("DTSTART" <> start, data),            do: data |> put_to_map(:start, process_date(start, data[:tzid]))
-  defp parse_line("DTEND" <> endd, data),               do: data |> put_to_map(:end, process_date(endd, data[:tzid]))
-  defp parse_line("DTSTAMP" <> stamp, data),            do: data |> put_to_map(:stamp, process_date(stamp, data[:tzid]))
-  defp parse_line("SUMMARY:" <> summary, data),         do: data |> put_to_map(:summary, process_string(summary))
-  defp parse_line("DESCRIPTION:" <> description, data), do: data |> put_to_map(:description, process_string(description))
-  defp parse_line("UID:" <> uid, data),                 do: data |> put_to_map(:uid, uid)
-  defp parse_line("RRULE:" <> rrule, data),             do: data |> put_to_map(:rrule, process_rrule(rrule, data[:tzid]))
-  defp parse_line("TZID:" <> tzid, data),               do: data |> Map.put(:tzid, tzid)
-  defp parse_line("CATEGORIES:" <> categories, data),    do: data |> put_to_map(:categories, String.split(categories, ","))
-  defp parse_line(_, data), do: data
+  defp parse_line("BEGIN:VEVENT" <> _, data, _locale),           do: %{data | events: [%Event{} | data[:events]]}
+  defp parse_line("DTSTART" <> start, data, locale),             do: data |> put_to_map(:start, process_date(start, data[:tzid], locale))
+  defp parse_line("DTEND" <> endd, data, locale),                do: data |> put_to_map(:end, process_date(endd, data[:tzid], locale))
+  defp parse_line("DTSTAMP" <> stamp, data, locale),             do: data |> put_to_map(:stamp, process_date(stamp, data[:tzid], locale))
+  defp parse_line("SUMMARY:" <> summary, data, _locale),         do: data |> put_to_map(:summary, process_string(summary))
+  defp parse_line("DESCRIPTION:" <> description, data, _locale), do: data |> put_to_map(:description, process_string(description))
+  defp parse_line("UID:" <> uid, data, _locale),                 do: data |> put_to_map(:uid, uid)
+  defp parse_line("RRULE:" <> rrule, data, _locale),             do: data |> put_to_map(:rrule, process_rrule(rrule, data[:tzid]))
+  defp parse_line("TZID:" <> tzid, data, _locale),               do: data |> Map.put(:tzid, tzid)
+  defp parse_line("CATEGORIES:" <> categories, data, _locale),   do: data |> put_to_map(:categories, String.split(categories, ","))
+  defp parse_line(_, data, _locale), do: data
 
   defp put_to_map(%{events: [event | events]} = data, key, value) do
     updated_event = %{event | key => value}
@@ -64,14 +64,14 @@ defmodule ExIcal.Parser do
   end
   defp put_to_map(data, _key, _value), do: data
 
-  defp process_date(":" <> date, tzid), do: DateParser.parse(date, tzid)
-  defp process_date(";" <> date, _) do
+  defp process_date(":" <> date, tzid, locale), do: DateParser.parse(date, tzid, locale)
+  defp process_date(";" <> date, _, locale) do
     [timezone, date] = date |> String.split(":")
     timezone = case timezone do
       "TZID=" <> timezone -> timezone
       _ -> nil
     end
-    DateParser.parse(date, timezone)
+    DateParser.parse(date, timezone, locale)
   end
 
   defp process_rrule(rrule, tzid) do

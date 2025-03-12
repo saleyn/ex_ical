@@ -67,54 +67,44 @@ defmodule ExIcal.DateParser do
 
   @type valid_timezone :: String.t | :utc | :local
 
-  @spec parse(String.t, valid_timezone | nil) :: %DateTime{}
-  def parse(data, tzid \\ nil)
+  @spec parse(String.t, valid_timezone | nil, String.t | nil) :: %DateTime{}
+  def parse(data, tzid \\ nil, locale \\ nil)
 
   # Date Format: "19690620T201804Z", Timezone: *
   def parse(<< year :: binary-size(4), month :: binary-size(2), day :: binary-size(2), "T",
                hour :: binary-size(2), minutes :: binary-size(2), seconds :: binary-size(2), "Z" >>,
-               _timezone) do
+               _timezone, locale) do
     date = {year, month, day}
     time = {hour, minutes, seconds}
 
     {to_integers(date), to_integers(time)}
     |> NaiveDateTime.from_erl!()
+    #|> Timex.to_datetime(locale || timezone || "Etc/UTC")
     |> DateTime.from_naive!("Etc/UTC")
-  end
-
-  # Date Format: "19690620T201804", Timezone: nil
-  def parse(<< year :: binary-size(4), month :: binary-size(2), day :: binary-size(2), "T",
-               hour :: binary-size(2), minutes :: binary-size(2), seconds :: binary-size(2) >>,
-               nil) do
-    date = {year, month, day}
-    time = {hour, minutes, seconds}
-
-    {to_integers(date), to_integers(time)}
-    |> NaiveDateTime.from_erl!()
-    |> DateTime.from_naive!("Etc/UTC")
+    |> maybe_shift_zone(locale)
   end
 
   # Date Format: "19690620T201804", Timezone: *
   def parse(<< year :: binary-size(4), month :: binary-size(2), day :: binary-size(2), "T",
                hour :: binary-size(2), minutes :: binary-size(2), seconds :: binary-size(2) >>,
-               timezone) do
+               timezone, locale) do
     date = {year, month, day}
     time = {hour, minutes, seconds}
 
     {to_integers(date), to_integers(time)}
-    |> Timex.to_datetime(timezone)
+    |> Timex.to_datetime(locale || timezone || "Etc/UTC")
   end
 
   # Date Format: "19690620Z", Timezone: *
-  def parse(<< year :: binary-size(4), month :: binary-size(2), day :: binary-size(2), "Z" >>, _timezone) do
+  def parse(<< year :: binary-size(4), month :: binary-size(2), day :: binary-size(2), "Z" >>, _timezone, locale) do
     {to_integers({year, month, day}), {0, 0, 0}}
-    |> Timex.to_datetime()
+    |> Timex.to_datetime(locale || "Etc/UTC")
   end
 
   # Date Format: "19690620", Timezone: *
-  def parse(<< year :: binary-size(4), month :: binary-size(2), day :: binary-size(2) >>, _timezone) do
+  def parse(<< year :: binary-size(4), month :: binary-size(2), day :: binary-size(2) >>, timezone, locale) do
     {to_integers({year, month, day}), {0, 0, 0}}
-    |> Timex.to_datetime()
+    |> Timex.to_datetime(locale || timezone || "Etc/UTC")
   end
 
   @spec to_integers({String.t, String.t, String.t}) :: {integer, integer, integer}
@@ -125,4 +115,7 @@ defmodule ExIcal.DateParser do
       String.to_integer(str3)
     }
   end
+
+  defp maybe_shift_zone(datetime, nil), do: datetime
+  defp maybe_shift_zone(datetime, timezone), do: DateTime.shift_zone!(datetime, timezone)
 end

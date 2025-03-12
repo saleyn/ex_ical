@@ -23,8 +23,8 @@ defmodule ExIcal do
 
   alias ExIcal.{Parser,Recurrence,Utils,Event}
 
-  @spec parse(String.t) :: [%Event{}]
-  defdelegate parse(data), to: Parser
+  @spec parse(String.t, String.t|nil) :: [%Event{}]
+  defdelegate parse(data, locale \\ nil), to: Parser
 
   @spec add_recurring_events([%Event{}]) :: [%Event{}]
   defdelegate add_recurring_events(events), to: Recurrence
